@@ -1,0 +1,144 @@
+Video Input
+    |
+    v
+Frame Sampling
+    |
+    v
+Pre-processing (Resize)-----------------|
+    |					|
+    v					v	
+Background supression 		frame difference
+    |					|
+    v					|
+Feature Extraction (MobileNet) <--------
+    |
+    v
+Temporal Feature Aggregation
+    |
+    v
+Classification (Fully Connected Layer)
+    |
+    v
+Output (Violence / Non-Violence)
+
+
+
+
+
+
+
+
+
+
+
+
+[Input Video]
+      |
+      v
+[Frame Extraction]
+      |
+      |
+[Frame Sampling]
+Structure Similarity Index(SSIM)  
+      |
+      |-------------------
+      |			 |
+      |       selection 10 frames randomly
+      v   		 |
+[Background Supp. 	 |
+/Frame Diff. 		 |
+/Optical Flow] 		 |
+      |                  v
+      |          [MobileNet CNN]
+      |                  |
+      v                  v
+[Understanding
+Temporal Features] [Spatial Features]
+      |                  |
+      |                  |
+      |		[Attention Mechanism
+      |		for Spatial Features]
+      |                  |
+      |                  v
+      |      [Processed Spatial Features]
+      |                  |
+      |------------------|
+                |
+                v
+         [Concatenate Features]
+                |
+                v
+        [Dense Layer 1] --> [Dropout] --> [Dense Layer 2]
+                |
+                v
+          [LSTM/GRU Layer]
+                |
+                v
+     [Output Layer with Softmax]
+                |
+                v
+  [Violence Detection Decision]
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dataset
+├── train
+│   ├── Fight
+│   │   ├── Fight_0
+│   │   │   ├── Fight_0_0.jpg
+│   │   │   └── Fight_0_149.jpg
+│   │   └── Fight_1
+│   │       ├── Fight_1_0.jpg
+│   │       └── Fight_1_149.jpg
+│   └── No_Fight
+│       ├── No_Fight_0
+│       │   ├── No_Fight_0_0.jpg
+│       │   └── No_Fight_0_149.jpg
+│       └── No_Fight_1
+│           ├── No_Fight_1_0.jpg
+│           └── No_Fight_1_149.jpg
+└── val
+    ├── fight
+    │   ├── fight_0
+    │   │   ├── fight_0_0.jpg
+    │   │   └── fight_0_149.jpg
+    │   └── fight_1
+    │       ├── fight_1_0.jpg
+    │       └── fight_1_149.jpg
+    └── no_fight
+        ├── no_fight_0
+        │   ├── no_fight_0_0.jpg
+        │   └── no_fight_0_149.jpg
+        └── no_fight_1
+            ├── no_fight_1_0.jpg
+            └── no_fight_1_149.jpg
+
+in dataset folder, i have two folders train and val(used for training and validation) i can provide the path to train and val, under these folders there are fight and no fight folders which need to be used as the labels for training, and inside these folders(fight and no fight) there are many folders each of them representing individual videos(having extracted frames of a video as jpeg images). I want to make sure that each of the folders(folder with extracted frames) are passed correctly.
+
+
+
+the main thing is i want a separate file for video frame extraction, uniform frame sampling(this need to be optional as others may need all frames for doing the task),  saving them to folders as i shown in the above tree, then frame resizing, and finally saving them to npy file(without frame difference) keep an eye on the image i have provided. 
+then the main program in a main file, put batch size and other params, and then i need to input the  frames to two separate streams, one stream with 10 randomly selected frames to attn and cnn for spatial understanding, and the other stream for temporal understanding, where i need to input all the frames, take frame difference of all frames, global_avg_pool it, pass on to lstm 
+
+
+
+
+
+
+
+
+
+  
